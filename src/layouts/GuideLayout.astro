@@ -5,7 +5,8 @@ const {
   title,
   description = '给家人的公开信息指南：购药、注射、医保与随访。',
 } = Astro.props;
-const base = import.meta.env.BASE_URL;
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 ---
 <!doctype html>
 <html lang="zh-CN">
@@ -20,14 +21,14 @@ const base = import.meta.env.BASE_URL;
   <body>
     <a class="skip" href="#main">跳到正文</a>
     <header class="top">
-      <a href="{base}" class="brand">家人常用手册 <span>公开信息版</span></a>
-      <a href="{base}">回首页</a>
+      <a href={base} class="brand">家人常用手册 <span>公开信息版</span></a>
+      <a href={base}>回首页</a>
     </header>
     <main id="main"><slot /></main>
     <footer>
       只整理公开办事信息；用药与随访安排请以医生意见为准。<br />
       本站不收集个人资料，不使用统计追踪和外部字体。<br />
-      <a href="{base}">返回首页 ↑</a>
+      <a href={base}>返回首页 ↑</a>
     </footer>
   </body>
 </html>

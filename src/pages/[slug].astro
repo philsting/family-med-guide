@@ -19,7 +19,8 @@ const locationCards = await Promise.all(locations.map(async location => ({
   location,
   Content: (await render(location)).Content,
 })));
-const base = import.meta.env.BASE_URL;
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 ---
 <Layout title={guide.data.title} description={guide.data.description}>
   <article class="article">

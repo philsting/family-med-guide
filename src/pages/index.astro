@@ -4,7 +4,8 @@ import Layout from '../layouts/GuideLayout.astro';
 import Notice from '../components/Notice.astro';
 const guides = (await getCollection('guides')).sort((a,b) => a.data.order-b.data.order);
 const confirmed = (await getCollection('locations')).filter(item => item.data.status === '已电话确认').length;
-const base = import.meta.env.BASE_URL;
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 ---
 <Layout title="家人的事，一件件办">
   <section class="hero">
