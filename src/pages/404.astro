@@ -1,4 +1,11 @@
 ---
 import Layout from '../layouts/GuideLayout.astro';
+
+const base = import.meta.env.BASE_URL;
 ---
-<Layout title="页面未找到"><h1>这个页面暂时找不到</h1><p>可以回到首页，重新选择需要的指南。</p><a class="external" href="/">返回首页 →</a></Layout>
+
+<Layout title="页面未找到">
+  <h1>这个页面暂时找不到</h1>
+  <p>可以回到首页，重新选择需要的指南。</p>
+  <a class="external" href={base}>返回首页 →</a>
+</Layout>
