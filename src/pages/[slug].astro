@@ -1,0 +1,60 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../layouts/GuideLayout.astro';
+import Notice from '../components/Notice.astro';
+import CallButton from '../components/CallButton.astro';
+import ExternalLinkCard from '../components/ExternalLinkCard.astro';
+import PriorityCard from '../components/PriorityCard.astro';
+
+export async function getStaticPaths() {
+  return (await getCollection('guides')).map(guide => ({
+    params: { slug: guide.id },
+    props: { guide },
+  }));
+}
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+const locations = guide.id === 'injection' ? await getCollection('locations') : [];
+const locationCards = await Promise.all(locations.map(async location => ({
+  location,
+  Content: (await render(location)).Content,
+})));
+---
+<Layout title={guide.data.title} description={guide.data.description}>
+  <article class="article">
+    <nav aria-label="面包屑"><a href="/">← 返回首页</a></nav>
+    <h1>{guide.data.title}</h1>
+    <p class="lead">{guide.data.description}</p>
+    <p class="meta">内容整理：{guide.data.updated}</p>
+    {guide.data.notice && <Notice>{guide.data.notice}</Notice>}
+    <div class="prose"><Content /></div>
+    {guide.data.calls.length > 0 && (
+      <section aria-label="公开咨询电话">
+        <h2>点击拨打公开电话</h2>
+        {guide.data.calls.map(call => <CallButton {...call} />)}
+      </section>
+    )}
+    {locationCards.length > 0 && (
+      <section>
+        <h2>候选方向与状态</h2>
+        {locationCards.map(({ location, Content: LocationContent }) => (
+          <PriorityCard title={location.data.title} status={location.data.status}>
+            <p>地址：{location.data.address}</p>
+            <p>最后电话核实：{location.data.confirmedAt ?? '尚未电话确认'}</p>
+            <p>{location.data.conditions}</p>
+            <LocationContent />
+            {location.data.phone && <CallButton label="机构公开电话" phone={location.data.phone} />}
+            {location.data.source && <ExternalLinkCard label="机构官方信息" url={location.data.source} description="公开联系方式来源" />}
+          </PriorityCard>
+        ))}
+      </section>
+    )}
+    {guide.data.links.length > 0 && (
+      <section>
+        <h2>官方资料与来源</h2>
+        {guide.data.links.map(link => <ExternalLinkCard {...link} />)}
+      </section>
+    )}
+    <nav><a href="/">← 看其他指南</a></nav>
+  </article>
+</Layout>

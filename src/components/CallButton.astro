@@ -1,0 +1,5 @@
+---
+interface Props { label: string; phone: string; }
+const {label,phone} = Astro.props;
+---
+<a class="call" href={`tel:${phone.replace(/[^+\d]/g,'')}`} aria-label={`拨打${label} ${phone}`}><span>{label}</span><strong>{phone}</strong><small>点击拨号 ↗</small></a>

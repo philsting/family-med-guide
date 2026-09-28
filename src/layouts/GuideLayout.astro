@@ -1,0 +1,32 @@
+---
+import '../styles/global.css';
+interface Props { title: string; description?: string; }
+const {
+  title,
+  description = '给家人的公开信息指南：购药、注射、医保与随访。',
+} = Astro.props;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="description" content={description} />
+    <title>{title} · 家庭医疗指南</title>
+  </head>
+  <body>
+    <a class="skip" href="#main">跳到正文</a>
+    <header class="top">
+      <a href="/" class="brand">家人常用手册 <span>公开信息版</span></a>
+      <a href="/">回首页</a>
+    </header>
+    <main id="main"><slot /></main>
+    <footer>
+      只整理公开办事信息；用药与随访安排请以医生意见为准。<br />
+      本站不收集个人资料，不使用统计追踪和外部字体。<br />
+      <a href="/">返回首页 ↑</a>
+    </footer>
+  </body>
+</html>

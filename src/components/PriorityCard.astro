@@ -1,0 +1,5 @@
+---
+interface Props { title: string; status: string; }
+const {title,status} = Astro.props;
+---
+<section class="priority"><span class="badge">{status}</span><h3>{title}</h3><slot /></section>

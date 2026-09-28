@@ -1,0 +1,6 @@
+---
+interface Props { label: string; url: string; description: string; }
+const {label,url,description} = Astro.props;
+if (!url.startsWith('https://')) throw new Error('外链必须使用 HTTPS');
+---
+<a class="external" href={url} target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer"><strong>{label} ↗</strong><span>{description} · 在新窗口打开</span></a>
