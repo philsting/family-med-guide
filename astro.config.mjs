@@ -1,6 +1,9 @@
 import { defineConfig } from 'astro/config';
 
-const isCloudflare = process.env.DEPLOY_TARGET === 'cloudflare';
+const deployTarget = process.env.DEPLOY_TARGET;
+const isCloudflare = deployTarget
+  ? deployTarget === 'cloudflare'
+  : process.env.WORKERS_CI === '1';
 
 export default defineConfig({
   site: isCloudflare
