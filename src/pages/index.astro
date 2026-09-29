@@ -2,29 +2,33 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/GuideLayout.astro';
 import Notice from '../components/Notice.astro';
-const guides = (await getCollection('guides')).sort((a,b) => a.data.order-b.data.order);
-const confirmed = (await getCollection('locations')).filter(item => item.data.status === '已电话确认').length;
+const homeCards = [
+  { id: 'medicine', title: '购买派格宾', description: '厂家电话、正规药房、冷藏运输' },
+  { id: 'first-injection', title: '第一次注射', description: '先问哪里能打，电话怎么说' },
+  { id: 'insurance', title: '医保 / 慢特病', description: '已有官方依据，再确认当前政策' },
+  { id: 'followup', title: '两针后复诊', description: '记什么、问什么、下一步怎么安排' },
+];
+const guides = await getCollection('guides');
+const visibleCards = homeCards.filter(card => guides.some(guide => guide.id === card.id));
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 ---
-<Layout title="家人的事，一件件办">
+<Layout title="看病用药备忘">
   <section class="hero">
-    <p class="eyebrow">家庭医疗信息指南</p>
-    <h1>家人的事，<br />一件件办。</h1>
-    <p class="lead">买药去哪里、注射怎么问、医保怎么办。<br />选一张卡片，查看下一步。</p>
+    <h1>看病用药备忘</h1>
+    <p class="lead">买药、打针、医保、复诊，按需要查看。</p>
   </section>
   <div class="grid">
-    {guides.map((guide,index) => (
+    {visibleCards.map((guide,index) => (
       <a class="nav-card" href={`${base}${guide.id}/`}>
         <span class="number">0{index+1} / 查看指南 →</span>
-        <strong>{guide.data.title}</strong>
-        <p>{guide.data.description}</p>
+        <strong>{guide.title}</strong>
+        <p>{guide.description}</p>
       </a>
     ))}
   </div>
-  <Notice title="第一次注射，先电话确认">
-    {confirmed === 0 ? '目前没有已确认的注射机构。' : '请查看各机构的确认日期和接收条件，出发前再次联系。'}
-    候选方向不代表可注射，请先问清是否接收外院处方和自带药。
+  <Notice title="当前最重要：先确定第一次注射地点">
+    先问厂家有没有合作点，再电话问附近社区卫生服务中心、门诊注射室或诊所。确认能接收后再带药过去。
   </Notice>
   <p class="meta">公开信息整理：2026-09-29 · 不记录个人病情或治疗数据</p>
 </Layout>
